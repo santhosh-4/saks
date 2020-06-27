@@ -1,4 +1,9 @@
-
+typedef struct PTR
+ {
+    char* ptr_location;
+    int size;
+ }ARRAY_PTR;
+ 
 ARRAY_PTR ascii_converter(unsigned long l_num,char* string_ptr,ARRAY_PTR addres_ptr,unsigned int size)//number,(string or array pointer),to addrees,size if array poiter
 {
 /***********************************************************************************************************************
