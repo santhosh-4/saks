@@ -1,0 +1,109 @@
+/*
+ * UART_GENRICC.c
+ *
+ *  Created on: Jul 8, 2020
+ *      Author: RV
+ */
+
+#include<string.h>
+extern ARRAY_PTR ascii_converter(unsigned long l_num,char* string_ptr,ARRAY_PTR addres_ptr,unsigned int size);
+
+typedef struct QUEUE_
+{
+    char* data;
+    int no_of_data;
+    struct QUEUE_* next;
+    struct QUEUE_* prev;
+
+}QUEU_E;
+typedef struct UART___
+{
+    char bufff[100];
+
+}UAR_T;
+
+QUEU_E or_queue;
+UAR_T  iot_uart;
+
+int send_in_uart(char* data,int no_data)
+{
+    typedef union UNIONNN__
+    {
+        char char_[2];
+        short int_;
+    }INT2CHAR;
+    INT2CHAR int_2_charr;
+    ARRAY_PTR ptr_lctn;
+    ptr_lctn.size=sizeof(iot_uart.bufff);
+    ptr_lctn.ptr_location=iot_uart.bufff;
+    ascii_converter(0,"*",ptr_lctn,0);
+    int_2_charr.int_=no_data+6;
+    ascii_converter(0,int_2_charr.char_,ptr_lctn,2);
+    ascii_converter(0,data,ptr_lctn,no_data);
+
+
+    return(0);
+}
+void uart_routine()
+{
+    or_queue.data=NULL;
+    or_queue.next=NULL;
+    or_queue.prev=NULL;
+    if(!fetch_frm_queue())
+    {
+
+    }
+}
+int add_in_queue(char* data,int no_of_data)
+{
+    QUEU_E *add,*temp;
+    add=(QUEU_E*)malloc(sizeof(QUEU_E));
+    add->next=NULL;
+    add->no_of_data=no_of_data;
+    add->data=(char*)malloc(no_of_data);
+    if(add->data!=NULL)
+    memcpy(add->data,data,no_of_data);
+    else
+        return(1);
+
+    if(or_queue.data==NULL)
+    {
+
+        or_queue.data=add->data;
+        or_queue.no_of_data=add->no_of_data;
+
+    }
+    else{
+        temp=or_queue.next;
+        while(temp->next!=NULL)
+        {
+            temp=temp->next;
+
+        }
+        temp->next=add;
+        add->prev=temp;
+    }
+    return(0);
+}
+
+char* fetch_frm_queue(char* buffer)
+{
+    QUEU_E *add,*temp;
+
+
+
+    if(or_queue.data==NULL)
+    {
+
+        return(1);
+    }
+    else{
+            temp=or_queue;
+            //memcpy(buffer,temp->data,temp->no_of_data);
+            send_in_uart(temp->data,temp->no_of_data);
+            or_queue=or_queue.next;
+            free(temp);
+
+    }
+    return(temp->data);
+}
